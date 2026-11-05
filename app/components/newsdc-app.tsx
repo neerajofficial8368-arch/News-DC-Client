@@ -791,7 +791,9 @@ export default function NewsDCApp() {
       setPreferencesOpen(false);
       setView("for-you");
       setCategory(null);
+      setContentType("");
       setPageOffset(0);
+      setFeedRefresh((current) => current + 1);
       showToast("Your interests are updated. Your For You feed is ready.");
     } catch (error) {
       showToast(error instanceof Error ? error.message : "Your interests could not be saved.");
