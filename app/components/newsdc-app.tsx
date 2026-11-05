@@ -956,6 +956,8 @@ export default function NewsDCApp() {
                   ? "Nothing matched that search"
                   : view === "category"
                     ? `No stories in ${category?.name ?? "this topic"} yet`
+                    : contentType
+                      ? `No ${CONTENT_TYPE_LABELS[contentType]} stories yet`
                     : "Your briefing is ready to take shape"
             }
             description={
@@ -963,12 +965,44 @@ export default function NewsDCApp() {
                 ? "Save an article you want to come back to. It will be waiting here."
                 : view === "search"
                   ? "Try a broader phrase or another data-center topic."
+                  : view === "category"
+                    ? contentType
+                      ? `No ${CONTENT_TYPE_LABELS[contentType]} stories are currently tagged ${category?.name ?? "with this topic"}. Clear the content filter or explore another topic.`
+                      : `There are currently no collected articles tagged ${category?.name ?? "with this topic"}. Choose a topic with stories or ingest more coverage.`
+                    : contentType
+                      ? `There are currently no collected ${CONTENT_TYPE_LABELS[contentType].toLowerCase()} stories. Clear the content filter or collect more coverage.`
                   : "Ingest content from your backend to discover current articles and research here."
             }
             action={
               view === "bookmarks" ? (
                 <button className="button button-outline" onClick={() => navigate("for-you")}>
                   Discover stories <Icon name="arrow-right" size={15} />
+                </button>
+              ) : view === "category" ? (
+                contentType ? (
+                  <button
+                    className="button button-outline"
+                    onClick={() => {
+                      setContentType("");
+                      setPageOffset(0);
+                    }}
+                  >
+                    Clear content filter <Icon name="arrow-right" size={15} />
+                  </button>
+                ) : (
+                  <button className="button button-outline" onClick={() => navigate("topics")}>
+                    Explore other topics <Icon name="arrow-right" size={15} />
+                  </button>
+                )
+              ) : contentType && view !== "search" ? (
+                <button
+                  className="button button-outline"
+                  onClick={() => {
+                    setContentType("");
+                    setPageOffset(0);
+                  }}
+                >
+                  Clear content filter <Icon name="arrow-right" size={15} />
                 </button>
               ) : view !== "search" ? (
                 <a
